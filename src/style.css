@@ -1,0 +1,57 @@
+@import url("https://unpkg.com/leaflet/dist/leaflet.css");
+
+:root {
+    --background-color: rgb(34, 40, 49);
+    --lighter-background-color: rgb(57, 62, 70);
+    --secondary: rgb(148, 137, 121);
+    --accent: rgb(223, 208, 184);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--accent);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+header,
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 10px;
+    background-color: var(--background-color);
+}
+
+.controlButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--lighter-background-color);
+    border-radius: 20%;
+    cursor: pointer;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+#map {
+    height: 100vh;
+    width: 100%;
+}
