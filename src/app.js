@@ -6,9 +6,17 @@ class LeafMap {
         this.map = L.map(this.containerId, {
             zoomControl: false,
             center: this.defaultCoords,
-            zoom: this.defaultZoom
+            zoom: this.defaultZoom,
+            minZoom: 5,
+            maxBounds: [
+                [48.0, 22.0], // Southwest corner
+                [50.0, 30.0]  // Northeast corner
+            ],
+            maxBoundsViscosity: -1.0
+
         });
         this.markers = [];
+        this.userMarkers = [];
     }
 
     initMap() {
@@ -27,25 +35,26 @@ class LeafMap {
         });
     }
 
-    addMarker(latlng, replace = false) {
-        if (replace) {
-            this.marker.forEach(m => this.map.removeLayer(m));
-            this.markers = [];
-        }
+    addMarker(latlng) {
+
+        //remove existing markers
+        this.markers.forEach(marker => {
+            this.map.removeLayer(marker);
+        });
 
         const coords = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
         const marker = L.marker(latlng, {
-            draggable: true,
-            autoPan: true
+        draggable: true,
+        autoPan: true
         }).addTo(this.map);
         this.map.flyTo(latlng, 16);
         marker.bindPopup("You clicked the map at " + coords).openPopup();
         this.markers.push(marker);
-
         marker.on('dragend', () => {
             marker.setPopupContent("Marker position: " + marker.getLatLng().toString()).openPopup();
             this.map.panTo(marker.getLatLng());
         });
+        
     }
 
     addUserMarker(latlng) {
@@ -53,7 +62,10 @@ class LeafMap {
             radius: 10,
         }).addTo(this.map);
         userMarker.bindPopup("Your location").openPopup();
-        this.markers.push(userMarker);
+        this.userMarkers.push(userMarker);
+        userMarker.on('click', () => {
+            this.map.panTo(userMarker.getLatLng(), 15);
+        });
     }
     locateUser() {
         if (!navigator.geolocation) {
@@ -64,6 +76,7 @@ class LeafMap {
             (pos) => {
                 const userCoords = [pos.coords.latitude, pos.coords.longitude];
                 this.addUserMarker(userCoords);
+                this.map.panTo(userCoords, 16);
             },
             (err) => {
                 alert("unable to retrieve your location: " + err.message);
@@ -73,7 +86,7 @@ class LeafMap {
 
 }
 
-const app = new LeafMap("map", [48.2258, 31.1056], 6);
+const app = new LeafMap("map", [49.529, 23.972], 10);
 app.initMap();
 app.bindEvents();
 app.locateUser();
