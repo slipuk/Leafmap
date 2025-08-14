@@ -90,3 +90,4 @@ const app = new LeafMap("map", [49.529, 23.972], 10);
 app.initMap();
 app.bindEvents();
 app.locateUser();
+///app
